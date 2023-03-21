@@ -6,11 +6,11 @@ namespace Project.Scripts.Core.Installers
     [Serializable]
     public class GameDependency
     {
-        public readonly ObjectPool mySoldiersPool;
-        public readonly ObjectPool enemySoldiersPool;
-        public readonly ColorParameters[] colors;
-        public readonly ShapeParameters[] shapes;
-        public readonly SizeParameters[] size;
+        public readonly ObjectPool MySoldiersPool;
+        public readonly ObjectPool EnemySoldiersPool;
+        public readonly ColorParameters[] Colors;
+        public readonly ShapeParameters[] Shapes;
+        public readonly SizeParameters[] Size;
 
         public GameDependency(
             ObjectPool mySoldiersPool,
@@ -20,11 +20,11 @@ namespace Project.Scripts.Core.Installers
             SizeParameters[] size
             )
         {
-            this.mySoldiersPool = mySoldiersPool;
-            this.enemySoldiersPool = enemySoldiersPool;
-            this.colors = colors;
-            this.shapes = shapes;
-            this.size = size;
+            MySoldiersPool = mySoldiersPool;
+            EnemySoldiersPool = enemySoldiersPool;
+            Colors = colors;
+            Shapes = shapes;
+            Size = size;
         }
     }
 }

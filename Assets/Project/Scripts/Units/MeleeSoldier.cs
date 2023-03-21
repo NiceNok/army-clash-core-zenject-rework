@@ -7,7 +7,7 @@ namespace Project.Scripts.Units
 {
     public class MeleeSoldier : Unit
     {
-        private float meleeRangeDistance = 2f;
+        private float _meleeRangeDistance = 2f;
         [SerializeField] private ObjectPool unitHealthFXPool;
 
         private void Awake()
@@ -80,7 +80,7 @@ namespace Project.Scripts.Units
 
         protected override void MoveToEnemy()
         {
-            currentEnemy = Type == UnitShape.CUBE ? FindClosestEnemy() : FindPoorEnemy();
+            currentEnemy = Type == UnitShape.Cube ? FindClosestEnemy() : FindPoorEnemy();
             if (currentEnemy == null || isAttack || IsMeleeDistance()) return;
             var step = MovementSpeed / 2 * Time.deltaTime;
             transform.position = Vector3.MoveTowards(transform.position, currentEnemy.transform.position, (float)step);
@@ -90,7 +90,7 @@ namespace Project.Scripts.Units
         {
             if (!currentEnemy) return false;
             var dist = Vector3.Distance(currentEnemy.transform.position, transform.position);
-            if (dist > meleeRangeDistance) return false;
+            if (dist > _meleeRangeDistance) return false;
             return true;
         }
 

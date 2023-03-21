@@ -6,7 +6,7 @@ namespace Project.Scripts.Core.Installers
 {
     public class BottomPanelInstaller : MonoInstaller
     {
-        [SerializeField] private BottomPanelStateChanger bottomPanel;
+        [SerializeField] private BottomPanelView bottomPanel;
 
         public override void InstallBindings()
         {
@@ -16,7 +16,7 @@ namespace Project.Scripts.Core.Installers
         private void BindBottomPanel()
         {
             Container
-                .Bind<BottomPanelStateChanger>()
+                .Bind<BottomPanelView>()
                 .FromInstance(bottomPanel)
                 .AsSingle();
         }

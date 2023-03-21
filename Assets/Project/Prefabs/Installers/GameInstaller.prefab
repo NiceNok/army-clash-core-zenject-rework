@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5349348099121822631
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5349348099121822630}
+  - component: {fileID: 5349348099121822629}
+  m_Layer: 0
+  m_Name: GameInstaller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5349348099121822630
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5349348099121822631}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -14.690809, y: 32.938934, z: -25.030268}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5349348099121822629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5349348099121822631}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5fcd4bb980d4801b9e4e90e15cbe32e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  settings:
+    mySoldiersPool: {fileID: 0}
+    enemySoldiersPool: {fileID: 0}
+    colors:
+    - {fileID: 11400000, guid: 8c4a86485b619d248a8b67d8d4b32f8f, type: 2}
+    - {fileID: 11400000, guid: 1bbc13e5f9c2d714b926731d7e30e6bb, type: 2}
+    - {fileID: 11400000, guid: dcc087edd6898ff4ea248f1bb1ccca58, type: 2}
+    shapes:
+    - {fileID: 11400000, guid: 0b7a485a43f039e438f645ea54ba5379, type: 2}
+    - {fileID: 11400000, guid: ff556ba63ba31ce4489b2dec20d338f9, type: 2}
+    size:
+    - {fileID: 11400000, guid: 3409f4783ef923f47a2c8fdd3b241cb0, type: 2}
+    - {fileID: 11400000, guid: f6a3b018989ea284581180135555983d, type: 2}
+  gameManager: {fileID: 0}

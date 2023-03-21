@@ -6,7 +6,7 @@ namespace Project.Scripts.Core.Installers
 {
     public class TopPanelInstaller : MonoInstaller
     {
-        [SerializeField] private TopPanelStateChanger _topPanelStateChanger;
+        [SerializeField] private TopPanelView topPanelView;
 
         public override void InstallBindings()
         {
@@ -16,8 +16,8 @@ namespace Project.Scripts.Core.Installers
         private void BindTopPanel()
         {
             Container
-                .Bind<TopPanelStateChanger>()
-                .FromInstance(_topPanelStateChanger)
+                .Bind<TopPanelView>()
+                .FromInstance(topPanelView)
                 .AsSingle();
         }
     }

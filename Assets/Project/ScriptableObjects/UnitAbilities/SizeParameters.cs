@@ -17,6 +17,6 @@ namespace Project.Scripts.ScriptableObject.UnitAbilities
 
 public enum UnitSize
 {
-    SMALL,
-    BIG
+    Small,
+    Big
 }

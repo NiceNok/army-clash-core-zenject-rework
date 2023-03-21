@@ -15,7 +15,7 @@ namespace Project.Scripts.ScriptableObject.UnitAbilities
 
     public enum UnitShape
     {
-        CUBE,
-        SPHERE
+        Cube,
+        Sphere
     }
 }

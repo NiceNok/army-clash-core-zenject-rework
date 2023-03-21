@@ -30,7 +30,6 @@ namespace Project.Scripts.Units
         public bool isInited;
         public bool IsDied => healthPoints <= 0;
         public Unit currentEnemy;
-        public string enemyTag;
 
         public event Action<GameObject> OnDeath;
         
@@ -72,14 +71,14 @@ namespace Project.Scripts.Units
 
         IEnumerator StartAttack()
         {
-            yield return new WaitUntil(() => GameManager.Battle);
+            yield return new WaitUntil(() => GameplayController.Battle);
             
-            InvokeRepeating("PerformAttack", (float)attackSpeed, (float)attackSpeed);
+            InvokeRepeating(nameof(PerformAttack), (float)attackSpeed, (float)attackSpeed);
         }
 
         void FixedUpdate()
         {
-            if (!isInited || !GameManager.Battle) return;
+            if (!isInited || !GameplayController.Battle) return;
             MoveToEnemy();
             _rigidbody.velocity = Vector3.zero;
             transform.localEulerAngles = new Vector3(0, transform.localEulerAngles.y, 0);//freeze rotation manually
@@ -105,9 +104,8 @@ namespace Project.Scripts.Units
             attackSpeed = Constants.BaseAttackSpeed;
         }
         
-        public void SetEnemies(List<Unit> enemies, string enemyTag)
+        public void SetEnemies(List<Unit> enemies)
         {
-            this.enemyTag = enemyTag;
             this.enemies = new Unit[enemies.Count];
             for (int i = 0; i < enemies.Count; i++)
                 this.enemies[i] = enemies[i];

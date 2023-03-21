@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Project.Scripts.Core.Installers;
 using Project.Scripts.ScriptableObject.UnitAbilities;
 using Project.Scripts.UI;
@@ -9,7 +10,7 @@ using Random = UnityEngine.Random;
 
 namespace Project.Scripts
 {
-    public class GameManager : MonoBehaviour, IInitializable
+    public sealed class GameplayController : MonoBehaviour, IInitializable
     {
         private ObjectPool _mySoldiersPool;
         private ObjectPool _enemySoldiersPool;
@@ -18,17 +19,17 @@ namespace Project.Scripts
         private SizeParameters[] _size;
 
         [Inject] private EndGamePanel _endGamePanel;
-        [Inject] private TopPanelStateChanger _topPanelStateChanger;
-        [Inject] private BottomPanelStateChanger _bottomPanelStateChanger;
+        [Inject] private TopPanelView _topPanelView;
+        [Inject] private BottomPanelView _bottomPanelView;
         
         [Inject]
         public void Construct(GameDependency constr)
         {
-            _mySoldiersPool = constr.mySoldiersPool;
-            _enemySoldiersPool = constr.enemySoldiersPool;
-            _colors = constr.colors;
-            _shapes = constr.shapes;
-            _size = constr.size;
+            _mySoldiersPool = constr.MySoldiersPool;
+            _enemySoldiersPool = constr.EnemySoldiersPool;
+            _colors = constr.Colors;
+            _shapes = constr.Shapes;
+            _size = constr.Size;
         }
 
         
@@ -38,19 +39,20 @@ namespace Project.Scripts
         }
 
         [Header("Army Values (base)")] [Space(15)]
-        public int MyArmySize = 20;
-        public int EnemyArmySize = 20;
-        public float DistanceBetweenUnits = 1.6f;
-        public int GridWidth = 5;
+        public int myArmySize = 20;
+        public int enemyArmySize = 20;
+        public float distanceBetweenUnits = 1.6f;
+        public int gridWidth = 5;
 
         private List<Unit> _mySoldiers;
         private List<Unit> _enemySoldiers;
 
         public static bool Battle;
         
-        public virtual void Initialize()
+        public void Initialize()
         {
-            Debug.LogError("init");
+            Debug.Log("Initialize gameplay");
+            
             _mySoldiersPool.Initialize();
             _enemySoldiersPool.Initialize();
             _mySoldiers = new List<Unit>();
@@ -60,14 +62,14 @@ namespace Project.Scripts
         
         private void InitializeSoldiers()
         {
-            for (int i = 0; i < MyArmySize; i++)
+            for (int i = 0; i < myArmySize; i++)
             {
                 var obj = _mySoldiersPool.GetObject();
                 var soldier = obj.GetComponent<MeleeSoldier>();
                 _mySoldiers.Add(soldier);
             }
 
-            for (int i = 0; i < EnemyArmySize; i++)
+            for (int i = 0; i < enemyArmySize; i++)
             {
                 var obj = _enemySoldiersPool.GetObject();
                 var soldier = obj.GetComponent<MeleeSoldier>();
@@ -77,7 +79,7 @@ namespace Project.Scripts
             RandomizeSoldiers();
         }
 
-        void RandomizeSoldiers()
+        private void RandomizeSoldiers()
         {
             for (int i = 0; i < _mySoldiers.Count; i++)
             {
@@ -85,8 +87,9 @@ namespace Project.Scripts
                 var randomColor = _colors[Random.Range(0, _colors.Length)];
                 var randomSize = _size[Random.Range(0, _size.Length)];
                 SetGridPosition(_mySoldiers[i].transform, i);
+                
                 _mySoldiers[i].Init(randomShape, randomColor, randomSize);
-                _mySoldiers[i].SetEnemies(_enemySoldiers, Constants.EnemyTag);
+                _mySoldiers[i].SetEnemies(_enemySoldiers);
                 _mySoldiers[i].OnDeath += ReturnSoldierToPool;
             }
 
@@ -97,43 +100,33 @@ namespace Project.Scripts
                 var randomSize = _size[Random.Range(0, _size.Length)];
                 SetGridPosition(_enemySoldiers[i].transform, i);
                 _enemySoldiers[i].Init(randomShape, randomColor, randomSize);
-                _enemySoldiers[i].SetEnemies(_mySoldiers, Constants.FriendlyTag);
+                _enemySoldiers[i].SetEnemies(_mySoldiers);
                 _enemySoldiers[i].SetEnemyView(randomColor.coloredMaterialEnemy);
                 _enemySoldiers[i].OnDeath += ReturnEnemyToPool;
 
             }
         }
 
-        void ReturnSoldierToPool(GameObject obj)
+        private void ReturnSoldierToPool(GameObject obj)
         {
             _mySoldiersPool.ReturnObject(obj);
             CheckGameState();
         }
 
-        void ReturnEnemyToPool(GameObject obj)
+        private void ReturnEnemyToPool(GameObject obj)
         {
             _enemySoldiersPool.ReturnObject(obj);
             CheckGameState();
         }
 
-        void CheckGameState()
+        private void CheckGameState()
         {
-            float aliveUnitsCount = 0;
-            float aliveEnemyCount = 0;
-            foreach (var soldier in _mySoldiers)
-                if (soldier.gameObject.activeInHierarchy)
-                    aliveUnitsCount++;
-
-            foreach (var soldier in _enemySoldiers)
-                if (soldier.gameObject.activeInHierarchy)
-                    aliveEnemyCount++;
-
-
+            float aliveUnitsCount = _mySoldiers.Count(soldier => soldier.gameObject.activeInHierarchy);
+            float aliveEnemyCount = _enemySoldiers.Count(soldier => soldier.gameObject.activeInHierarchy);
             
-            _topPanelStateChanger.СhangeState(
+            _topPanelView.ChangeState(
                 aliveUnitsCount/ _mySoldiers.Count, 
                 aliveEnemyCount / _enemySoldiers.Count);
-                
 
             if (aliveEnemyCount <= 0)
                 EndGame(true);
@@ -142,7 +135,7 @@ namespace Project.Scripts
 
         }
 
-        void EndGame(bool state)
+        private void EndGame(bool state)
         {
             Battle = false;
             _endGamePanel.OpenEndPanel(state);
@@ -162,13 +155,13 @@ namespace Project.Scripts
         public void StartButton()
         {
             Battle = true;
-            _bottomPanelStateChanger.EnableBottomPanel(false);
+            _bottomPanelView.EnableBottomPanel(false);
         }
 
-        void SetGridPosition(Transform tr, int id)
+        private void SetGridPosition(Transform tr, int id)
         {
-            var z = id % GridWidth * DistanceBetweenUnits;
-            var x = id / GridWidth * DistanceBetweenUnits;
+            var z = id % gridWidth * distanceBetweenUnits;
+            var x = id / gridWidth * distanceBetweenUnits;
             tr.localPosition = new Vector3(x, 0, z);
         }
     }

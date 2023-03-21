@@ -16,8 +16,8 @@ namespace Project.Scripts.ScriptableObject.UnitAbilities
 
     public enum UnitColor
     {
-        BLUE = 0,
-        GREEN = 1,
-        RED = 2
+        Blue = 0,
+        Green = 1,
+        Red = 2
     }
 }

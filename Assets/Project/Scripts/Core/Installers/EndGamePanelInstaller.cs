@@ -7,7 +7,7 @@ namespace Project.Scripts.Core.Installers
 {
     public class EndGamePanelInstaller : MonoInstaller
     {
-        [SerializeField] private Settings _settings;
+        [SerializeField] private Settings settings;
         public override void InstallBindings()
         {
             BindEndGamePanel();
@@ -17,7 +17,7 @@ namespace Project.Scripts.Core.Installers
         {
             Container
                 .Bind<EndGamePanel>()
-                .FromInstance(_settings.instance)
+                .FromInstance(settings.instance)
                 .AsSingle();
         }
 

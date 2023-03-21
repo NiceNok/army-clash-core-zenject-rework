@@ -7,7 +7,7 @@ public class ObjectPool : MonoBehaviour
     public GameObject prefab;
     public int initialSize;
 
-    public readonly Stack<GameObject> instances = new Stack<GameObject>();
+    public readonly Stack<GameObject> Instances = new Stack<GameObject>();
     
     private void Awake()
     {
@@ -20,13 +20,13 @@ public class ObjectPool : MonoBehaviour
         {
             var obj = CreateInstance();
             obj.SetActive(false);
-            instances.Push(obj);
+            Instances.Push(obj);
         }
     }
     
     public GameObject GetObject()
     {
-        var obj = instances.Count > 0 ? instances.Pop() : CreateInstance();
+        var obj = Instances.Count > 0 ? Instances.Pop() : CreateInstance();
         obj.SetActive(true);
         return obj;
     }
@@ -39,9 +39,9 @@ public class ObjectPool : MonoBehaviour
 
         obj.transform.position= new Vector3(0f,0f,0f);
         obj.SetActive(false);
-        if (!instances.Contains(obj))
+        if (!Instances.Contains(obj))
         {
-            instances.Push(obj);
+            Instances.Push(obj);
         }
     }
 

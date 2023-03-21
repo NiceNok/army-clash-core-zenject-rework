@@ -6,7 +6,7 @@ namespace Project.Scripts.Core.Installers
 {
     public class UiManagerInstaller : MonoInstaller
     {
-        [SerializeField] private UIManager _uiManager;
+        [SerializeField] private UIManager uiManager;
         public override void InstallBindings()
         {
             BindUIManager();
@@ -16,7 +16,7 @@ namespace Project.Scripts.Core.Installers
         {
             Container
                 .Bind<UIManager>()
-                .FromInstance(_uiManager)
+                .FromInstance(uiManager)
                 .AsSingle();
         }
     }

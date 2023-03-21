@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Zenject;
 
 namespace Project.Scripts.UI
 {
@@ -7,7 +8,8 @@ namespace Project.Scripts.UI
         [SerializeField] private GameObject endGamePanel;
         [SerializeField] private GameObject win;
         [SerializeField] private GameObject lose;
-
+        [Inject] private UIManager _uiManager;
+        
         public EndGamePanel(
             GameObject endGamePanel,
             GameObject win,
@@ -24,6 +26,16 @@ namespace Project.Scripts.UI
             endGamePanel.SetActive(true);
             win.SetActive(state);
             lose.SetActive(!state);
+        }
+
+        public void PlayAgainButtonClick()
+        {
+            _uiManager.PlayAgain();
+        }
+
+        public void BackToMenuButtonClick()
+        {
+            _uiManager.BackToMenu();
         }
     }
 }

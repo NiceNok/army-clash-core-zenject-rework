@@ -7,8 +7,8 @@ namespace Project.Scripts.Core.Installers
 {
     public class GameInstaller: MonoInstaller
     {
-        [SerializeField] private Settings _settings;
-        [SerializeField] private GameManager _gameManager;
+        [SerializeField] private Settings settings;
+        [SerializeField] private GameplayController gameplayController;
         
         public override void InstallBindings()
         {      
@@ -22,18 +22,18 @@ namespace Project.Scripts.Core.Installers
                 .Bind<GameDependency>()
                 .AsSingle()
                 .WithArguments(
-                    _settings.mySoldiersPool,
-                    _settings.enemySoldiersPool,
-                    _settings.colors,
-                    _settings.shapes,
-                    _settings.size
+                    settings.mySoldiersPool,
+                    settings.enemySoldiersPool,
+                    settings.colors,
+                    settings.shapes,
+                    settings.size
                     );
         }
         
         private void BindGameManager()
         {
-            Container.Bind(typeof(GameManager))
-                .FromInstance(_gameManager)
+            Container.Bind(typeof(GameplayController))
+                .FromInstance(gameplayController)
                 .AsSingle();
         }
         [Serializable]

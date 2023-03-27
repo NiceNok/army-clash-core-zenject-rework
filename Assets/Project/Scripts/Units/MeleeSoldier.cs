@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Linq;
 using Project.Scripts.ScriptableObject.UnitAbilities;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -17,43 +17,26 @@ namespace Project.Scripts.Units
             unitHealthFXPool.Initialize();
         }
 
-        Unit FindClosestEnemy()
+        private Unit FindClosestEnemy()
         {
-            Unit closestUnit = null;
-            float minDist = Mathf.Infinity;
             Vector3 currentPos = transform.position;
-
-            foreach (Unit unit in enemies)
-            {
-                if (!unit.isActiveAndEnabled) continue;
-                float dist = Vector3.Distance(unit.transform.position, currentPos);
-                if (dist < minDist)
-                {
-                    closestUnit = unit;
-                    minDist = dist;
-                }
-            }
-
-            return closestUnit;
+            
+            return enemies.Where(unit => unit.isActiveAndEnabled)
+                .OrderBy(unit => Vector3.Distance(unit.transform.position, currentPos))
+                .FirstOrDefault();
         }
 
-        Unit FindPoorEnemy()
+        /// <summary>
+        /// returns Unit with lowest HP
+        /// </summary>
+        /// <returns></returns>
+        private Unit FindPoorEnemy()
         {
             if(IsMeleeDistance()) return currentEnemy;
-            Unit poorUnit = null;
-            double minHealth = Double.MaxValue;
-            foreach (Unit unit in enemies)
-            {
-                if (!unit.isActiveAndEnabled) continue;
-                double health = unit.HealthPoints;
-                if (health < minHealth)
-                {
-                    poorUnit = unit;
-                    minHealth = health;
-                }
-            }
 
-            return poorUnit;
+            return enemies.Where(unit => unit.isActiveAndEnabled)
+                .OrderBy(unit => unit.HealthPoints)
+                .FirstOrDefault();
         }
 
         public override void GetDamage(double damage)
@@ -64,7 +47,7 @@ namespace Project.Scripts.Units
             if (IsDied) PerformDeath();
         }
 
-        void ShowHealthChange(double damage)
+        private void ShowHealthChange(double damage)
         {
             var obj = unitHealthFXPool.GetObject();
             var hp = obj.GetComponent<UnitHealthChangeView>();
@@ -72,7 +55,11 @@ namespace Project.Scripts.Units
             hp.OnFinish += ReturnHealthViewObject;
         }
 
-        void ReturnHealthViewObject(UnitHealthChangeView hp)
+        /// <summary>
+        /// return object to pool
+        /// </summary>
+        /// <param name="hp"></param>
+        private void ReturnHealthViewObject(UnitHealthChangeView hp)
         {
             unitHealthFXPool.ReturnObject(hp.gameObject);
             hp.OnFinish -= ReturnHealthViewObject;
@@ -86,7 +73,7 @@ namespace Project.Scripts.Units
             transform.position = Vector3.MoveTowards(transform.position, currentEnemy.transform.position, (float)step);
         }
 
-        bool IsMeleeDistance()
+        private bool IsMeleeDistance()
         {
             if (!currentEnemy) return false;
             var dist = Vector3.Distance(currentEnemy.transform.position, transform.position);

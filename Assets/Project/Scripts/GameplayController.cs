@@ -62,20 +62,14 @@ namespace Project.Scripts
         
         private void InitializeSoldiers()
         {
-            for (int i = 0; i < myArmySize; i++)
-            {
-                var obj = _mySoldiersPool.GetObject();
-                var soldier = obj.GetComponent<MeleeSoldier>();
-                _mySoldiers.Add(soldier);
-            }
-
-            for (int i = 0; i < enemyArmySize; i++)
-            {
-                var obj = _enemySoldiersPool.GetObject();
-                var soldier = obj.GetComponent<MeleeSoldier>();
-                _enemySoldiers.Add(soldier);
-            }
-
+            _mySoldiers = Enumerable.Range(0, myArmySize)
+                .Select(s => _mySoldiersPool.GetObject().GetComponent<MeleeSoldier>() as Unit)
+                .ToList();
+                
+            _enemySoldiers = Enumerable.Range(0, myArmySize)
+                .Select(s => _enemySoldiersPool.GetObject().GetComponent<MeleeSoldier>() as Unit)
+                .ToList();
+            
             RandomizeSoldiers();
         }
 
@@ -99,6 +93,7 @@ namespace Project.Scripts
                 var randomColor = _colors[Random.Range(0, _colors.Length)];
                 var randomSize = _size[Random.Range(0, _size.Length)];
                 SetGridPosition(_enemySoldiers[i].transform, i);
+                
                 _enemySoldiers[i].Init(randomShape, randomColor, randomSize);
                 _enemySoldiers[i].SetEnemies(_mySoldiers);
                 _enemySoldiers[i].SetEnemyView(randomColor.coloredMaterialEnemy);

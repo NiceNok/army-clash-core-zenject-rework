@@ -76,7 +76,7 @@ namespace Project.Scripts.Units
             InvokeRepeating(nameof(PerformAttack), (float)attackSpeed, (float)attackSpeed);
         }
 
-        void FixedUpdate()
+        private void FixedUpdate()
         {
             if (!isInited || !GameplayController.Battle) return;
             MoveToEnemy();
